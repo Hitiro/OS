@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="OS.Modelo.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EhFisico" Type="bit" Nullable="false" />
+          <Property Name="Nome" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Docuemtno" Type="char" MaxLength="14" Nullable="false" />
+          <Property Name="Telefone1" Type="char" MaxLength="11" Nullable="false" />
+          <Property Name="Telefone2" Type="char" MaxLength="11" />
+        </EntityType>
+        <EntityType Name="Mercadoria">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EhServico" Type="bit" Nullable="false" />
+          <Property Name="Nome" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Preco" Type="money" Nullable="false" />
+          <Property Name="Qtde" Type="int" />
+        </EntityType>
+        <EntityType Name="OrdemServico">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClienteID" Type="int" Nullable="false" />
+          <Property Name="DtAbertura" Type="datetime" Nullable="false" />
+          <Property Name="DtFechamento" Type="datetime" />
+          <Property Name="Observacao" Type="varchar" MaxLength="1024" />
+          <Property Name="Situacao" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="SituacaoDescricao" Type="varchar" MaxLength="14" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrdemServicoItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrdemServicoID" Type="int" Nullable="false" />
+          <Property Name="MercadoriaID" Type="int" Nullable="false" />
+          <Property Name="Preco" Type="money" Nullable="false" />
+          <Property Name="Qtde" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Observacao" Type="varchar" MaxLength="512" />
+        </EntityType>
+        <Association Name="FK_OrdemServico_Cliente">
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
+          <End Role="OrdemServico" Type="Self.OrdemServico" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdemServico">
+              <PropertyRef Name="ClienteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdemServicoItem_Mercadoria">
+          <End Role="Mercadoria" Type="Self.Mercadoria" Multiplicity="1" />
+          <End Role="OrdemServicoItem" Type="Self.OrdemServicoItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mercadoria">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdemServicoItem">
+              <PropertyRef Name="MercadoriaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdemServicoItem_OrdemServico">
+          <End Role="OrdemServico" Type="Self.OrdemServico" Multiplicity="1" />
+          <End Role="OrdemServicoItem" Type="Self.OrdemServicoItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrdemServico">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdemServicoItem">
+              <PropertyRef Name="OrdemServicoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="SpAnaliseVendasReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="dtInicial" Type="date" Mode="In" />
+          <Parameter Name="dtFinal" Type="date" Mode="In" />
+        </Function>
+        <Function Name="SpVerificaEstoque" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MercadoriaID" Type="int" Mode="In" />
+          <Parameter Name="QtdeDesejada" Type="decimal" Mode="In" />
+        </Function>
+        <EntityContainer Name="OSModeloStoreContainer">
+          <EntitySet Name="Cliente" EntityType="Self.Cliente" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Mercadoria" EntityType="Self.Mercadoria" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrdemServico" EntityType="Self.OrdemServico" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrdemServicoItem" EntityType="Self.OrdemServicoItem" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_OrdemServico_Cliente" Association="Self.FK_OrdemServico_Cliente">
+            <End Role="Cliente" EntitySet="Cliente" />
+            <End Role="OrdemServico" EntitySet="OrdemServico" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdemServicoItem_Mercadoria" Association="Self.FK_OrdemServicoItem_Mercadoria">
+            <End Role="Mercadoria" EntitySet="Mercadoria" />
+            <End Role="OrdemServicoItem" EntitySet="OrdemServicoItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdemServicoItem_OrdemServico" Association="Self.FK_OrdemServicoItem_OrdemServico">
+            <End Role="OrdemServico" EntitySet="OrdemServico" />
+            <End Role="OrdemServicoItem" EntitySet="OrdemServicoItem" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="OS.Modelo" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="Banco" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Cliente" EntityType="OS.Modelo.Cliente" />
+          <EntitySet Name="Mercadoria" EntityType="OS.Modelo.Mercadoria" />
+          <EntitySet Name="OrdemServico" EntityType="OS.Modelo.OrdemServico" />
+          <EntitySet Name="OrdemServicoItem" EntityType="OS.Modelo.OrdemServicoItem" />
+          <AssociationSet Name="FK_OrdemServico_Cliente" Association="OS.Modelo.FK_OrdemServico_Cliente">
+            <End Role="Cliente" EntitySet="Cliente" />
+            <End Role="OrdemServico" EntitySet="OrdemServico" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdemServicoItem_Mercadoria" Association="OS.Modelo.FK_OrdemServicoItem_Mercadoria">
+            <End Role="Mercadoria" EntitySet="Mercadoria" />
+            <End Role="OrdemServicoItem" EntitySet="OrdemServicoItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrdemServicoItem_OrdemServico" Association="OS.Modelo.FK_OrdemServicoItem_OrdemServico">
+            <End Role="OrdemServico" EntitySet="OrdemServico" />
+            <End Role="OrdemServicoItem" EntitySet="OrdemServicoItem" />
+          </AssociationSet>
+          <FunctionImport Name="SpAnaliseVendasReport" ReturnType="Collection(OS.Modelo.SpAnaliseVendasReport_Result)">
+            <Parameter Name="dtInicial" Mode="In" Type="DateTime" />
+            <Parameter Name="dtFinal" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="SpVerificaEstoque" ReturnType="Collection(Boolean)">
+            <Parameter Name="MercadoriaID" Mode="In" Type="Int32" />
+            <Parameter Name="QtdeDesejada" Mode="In" Type="Decimal" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EhFisico" Type="Boolean" Nullable="false" />
+          <Property Name="Nome" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Docuemtno" Type="String" Nullable="false" MaxLength="14" FixedLength="true" Unicode="false" />
+          <Property Name="Telefone1" Type="String" Nullable="false" MaxLength="11" FixedLength="true" Unicode="false" />
+          <Property Name="Telefone2" Type="String" MaxLength="11" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="OrdemServico" Relationship="OS.Modelo.FK_OrdemServico_Cliente" FromRole="Cliente" ToRole="OrdemServico" />
+        </EntityType>
+        <EntityType Name="Mercadoria">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EhServico" Type="Boolean" Nullable="false" />
+          <Property Name="Nome" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Preco" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="Qtde" Type="Int32" />
+          <NavigationProperty Name="OrdemServicoItem" Relationship="OS.Modelo.FK_OrdemServicoItem_Mercadoria" FromRole="Mercadoria" ToRole="OrdemServicoItem" />
+        </EntityType>
+        <EntityType Name="OrdemServico">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClienteID" Type="Int32" Nullable="false" />
+          <Property Name="DtAbertura" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DtFechamento" Type="DateTime" Precision="3" />
+          <Property Name="Observacao" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="Situacao" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Cliente" Relationship="OS.Modelo.FK_OrdemServico_Cliente" FromRole="OrdemServico" ToRole="Cliente" />
+          <NavigationProperty Name="OrdemServicoItem" Relationship="OS.Modelo.FK_OrdemServicoItem_OrdemServico" FromRole="OrdemServico" ToRole="OrdemServicoItem" />
+          <Property Name="SituacaoDescricao" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="OrdemServicoItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrdemServicoID" Type="Int32" Nullable="false" />
+          <Property Name="MercadoriaID" Type="Int32" Nullable="false" />
+          <Property Name="Preco" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="Qtde" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Observacao" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Mercadoria" Relationship="OS.Modelo.FK_OrdemServicoItem_Mercadoria" FromRole="OrdemServicoItem" ToRole="Mercadoria" />
+          <NavigationProperty Name="OrdemServico" Relationship="OS.Modelo.FK_OrdemServicoItem_OrdemServico" FromRole="OrdemServicoItem" ToRole="OrdemServico" />
+        </EntityType>
+        <Association Name="FK_OrdemServico_Cliente">
+          <End Type="OS.Modelo.Cliente" Role="Cliente" Multiplicity="1" />
+          <End Type="OS.Modelo.OrdemServico" Role="OrdemServico" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdemServico">
+              <PropertyRef Name="ClienteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdemServicoItem_Mercadoria">
+          <End Type="OS.Modelo.Mercadoria" Role="Mercadoria" Multiplicity="1" />
+          <End Type="OS.Modelo.OrdemServicoItem" Role="OrdemServicoItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mercadoria">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdemServicoItem">
+              <PropertyRef Name="MercadoriaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrdemServicoItem_OrdemServico">
+          <End Type="OS.Modelo.OrdemServico" Role="OrdemServico" Multiplicity="1" />
+          <End Type="OS.Modelo.OrdemServicoItem" Role="OrdemServicoItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrdemServico">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="OrdemServicoItem">
+              <PropertyRef Name="OrdemServicoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="SpAnaliseVendasReport_Result">
+          <Property Type="DateTime" Name="OSDataAbertura" Nullable="true" />
+          <Property Type="DateTime" Name="OSDataFechamento" Nullable="true" />
+          <Property Type="String" Name="OSSituacao" Nullable="false" MaxLength="14" />
+          <Property Type="String" Name="Cliente" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Telefone" Nullable="false" MaxLength="11" />
+          <Property Type="String" Name="MercadoriaNome" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="MercadoriaTipo" Nullable="false" MaxLength="10" />
+          <Property Type="Decimal" Name="MercadoriaPreco" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="ItemQtde" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ItemPreco" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="ItemSubTotal" Nullable="true" Precision="38" Scale="6" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="OSModeloStoreContainer" CdmEntityContainer="Banco">
+          <EntitySetMapping Name="Cliente">
+            <EntityTypeMapping TypeName="OS.Modelo.Cliente">
+              <MappingFragment StoreEntitySet="Cliente">
+                <ScalarProperty Name="Telefone2" ColumnName="Telefone2" />
+                <ScalarProperty Name="Telefone1" ColumnName="Telefone1" />
+                <ScalarProperty Name="Docuemtno" ColumnName="Docuemtno" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="EhFisico" ColumnName="EhFisico" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Mercadoria">
+            <EntityTypeMapping TypeName="OS.Modelo.Mercadoria">
+              <MappingFragment StoreEntitySet="Mercadoria">
+                <ScalarProperty Name="Qtde" ColumnName="Qtde" />
+                <ScalarProperty Name="Preco" ColumnName="Preco" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="EhServico" ColumnName="EhServico" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrdemServico">
+            <EntityTypeMapping TypeName="OS.Modelo.OrdemServico">
+              <MappingFragment StoreEntitySet="OrdemServico">
+                <ScalarProperty Name="SituacaoDescricao" ColumnName="SituacaoDescricao" />
+                <ScalarProperty Name="Situacao" ColumnName="Situacao" />
+                <ScalarProperty Name="Observacao" ColumnName="Observacao" />
+                <ScalarProperty Name="DtFechamento" ColumnName="DtFechamento" />
+                <ScalarProperty Name="DtAbertura" ColumnName="DtAbertura" />
+                <ScalarProperty Name="ClienteID" ColumnName="ClienteID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrdemServicoItem">
+            <EntityTypeMapping TypeName="OS.Modelo.OrdemServicoItem">
+              <MappingFragment StoreEntitySet="OrdemServicoItem">
+                <ScalarProperty Name="Observacao" ColumnName="Observacao" />
+                <ScalarProperty Name="Qtde" ColumnName="Qtde" />
+                <ScalarProperty Name="Preco" ColumnName="Preco" />
+                <ScalarProperty Name="MercadoriaID" ColumnName="MercadoriaID" />
+                <ScalarProperty Name="OrdemServicoID" ColumnName="OrdemServicoID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SpAnaliseVendasReport" FunctionName="OS.Modelo.Store.SpAnaliseVendasReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OS.Modelo.SpAnaliseVendasReport_Result">
+                <ScalarProperty Name="OSDataAbertura" ColumnName="OSDataAbertura" />
+                <ScalarProperty Name="OSDataFechamento" ColumnName="OSDataFechamento" />
+                <ScalarProperty Name="OSSituacao" ColumnName="OSSituacao" />
+                <ScalarProperty Name="Cliente" ColumnName="Cliente" />
+                <ScalarProperty Name="Telefone" ColumnName="Telefone" />
+                <ScalarProperty Name="MercadoriaNome" ColumnName="MercadoriaNome" />
+                <ScalarProperty Name="MercadoriaTipo" ColumnName="MercadoriaTipo" />
+                <ScalarProperty Name="MercadoriaPreco" ColumnName="MercadoriaPreco" />
+                <ScalarProperty Name="ItemQtde" ColumnName="ItemQtde" />
+                <ScalarProperty Name="ItemPreco" ColumnName="ItemPreco" />
+                <ScalarProperty Name="ItemSubTotal" ColumnName="ItemSubTotal" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SpVerificaEstoque" FunctionName="OS.Modelo.Store.SpVerificaEstoque" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
