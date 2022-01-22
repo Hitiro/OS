@@ -1,0 +1,11 @@
+select disk 1 
+Clean 
+Create Partition Primary Size=2000
+Format FS=fat32 quick label="WinPE" 
+Assign letter=W 
+Active 
+Create Partition Primary 
+Format FS=ntfs quick label="Deploy" 
+Assign letter=P 
+list vol 
+exit 
