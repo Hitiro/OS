@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SysCom;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,14 +55,52 @@ namespace OS.Servico
 
         public bool ChecarItem(OrdemServicoItem item)
         {
-            var estoqueok = ChecarEstoque(item);
-
-            if (!estoqueok)
+            if (Validador.EhValido(item))
             {
-                MessageBox.Show("Quantidade em estoue insuficiente");
-            }
+                var estoqueok = ChecarEstoque(item);
 
-            return estoqueok;
+                if (!estoqueok)
+                {
+                    MessageBox.Show("Quantidade em estoue insuficiente");
+                }
+
+                return estoqueok;
+            }
+            else
+            {
+                return false;
+            }
+            
+
+        }
+
+        public bool ChecarOS(OrdemServico os, BindingList<OrdemServicoItem> osItens)
+        {
+            if (Validador.EhValido(os))
+            {
+                if (osItens.Count > 0)
+                {
+                    return true;
+                }
+
+                MessageBox.Show("Informe ao menos um ítem para salvar");
+            }
+            return false;
+        }
+
+        internal void MesclarMemoriaDB(OrdemServico os, BindingList<OrdemServicoItem> osItens)
+        {
+            foreach (var dbItem in os.OrdemServicoItem.ToArray())
+            {
+                if (!osItens.Contains(dbItem))
+                {
+                    _banco.OrdemServicoItem.Remove(dbItem);
+                }
+            }
+            foreach (var item in osItens)
+            {
+                os.OrdemServicoItem.Add(item);
+            }
 
         }
 

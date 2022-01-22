@@ -30,5 +30,25 @@ namespace OS
             var tela = new OrdemServicoLista();
             tela.ShowDialog();
         }
+
+        private MercadoriaLista _mercadoriaLista;
+        private void tliMercadoria_ItemClick(object sender, TileItemEventArgs e)
+        {
+            if (_mercadoriaLista == null)
+            {
+                _mercadoriaLista = new MercadoriaLista();
+                _mercadoriaLista.FormClosed += (s, args) => _mercadoriaLista = null;
+            }
+
+            _mercadoriaLista.Show();
+            _mercadoriaLista.Activate();
+
+        }
+
+        private void tileItem1_ItemClick(object sender, TileItemEventArgs e)
+        {
+            var tela = new FuncionarioLista();
+            tela.ShowDialog();
+        }
     }
 }

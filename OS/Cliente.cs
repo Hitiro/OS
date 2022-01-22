@@ -23,9 +23,14 @@ namespace OS
         public int ID { get; set; }
         public bool EhFisico { get; set; }
         public string Nome { get; set; }
-        public string Docuemtno { get; set; }
+        public string Documento { get; set; }
         public string Telefone1 { get; set; }
         public string Telefone2 { get; set; }
+        public string CEP { get; set; }
+        public string Logradouro { get; set; }
+        public string Cidade { get; set; }
+        public string UF { get; set; }
+        public string Numero { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrdemServico> OrdemServico { get; set; }

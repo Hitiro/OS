@@ -12,24 +12,21 @@ namespace OS
     using System;
     using System.Collections.Generic;
     
-    public partial class Mercadoria
+    public partial class Representante
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Mercadoria()
+        public Representante()
         {
-            this.OrdemServicoItem = new HashSet<OrdemServicoItem>();
+            this.Mercadoria = new HashSet<Mercadoria>();
         }
     
         public int ID { get; set; }
-        public bool EhServico { get; set; }
+        public int FornecedorID { get; set; }
         public string Nome { get; set; }
-        public decimal Preco { get; set; }
-        public Nullable<int> Qtde { get; set; }
-        public int RepresentanteID { get; set; }
-        public bool Excluido { get; set; }
+        public string TelefoneCel { get; set; }
     
+        public virtual Fornecedor Fornecedor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<OrdemServicoItem> OrdemServicoItem { get; set; }
-        public virtual Representante Representante { get; set; }
+        public virtual ICollection<Mercadoria> Mercadoria { get; set; }
     }
 }

@@ -35,37 +35,31 @@ namespace OS.Cadastro
             novo.DtAbertura = DateTime.Now;
             novo.Situacao = "A";
 
-            var detalhe = new OrdemServicoDetalhe(_svc, novo);
+            var detalhe = new OrdemServicoDetalhe(_svc, novo, this);
             var salvar = detalhe.Executar();
 
-            if (salvar == true)
-            {
-                //_banco.OrdemServico.Add(novo);
-                //_banco.SaveChanges();
-
-                _svc.Inserir(novo);
-
-                _itens.Add(novo);
-            }
+           
         }
+
+        private Dictionary<OrdemServico, OrdemServicoDetalhe> _emEdicao = new Dictionary<OrdemServico, OrdemServicoDetalhe>();
 
         private void bbiEditar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             var editar = ordemServicoBindingSource.Current as OrdemServico;
-
-            var detalhe = new OrdemServicoDetalhe(_svc, editar);
-            var salvar = detalhe.Executar();
-
-            if (salvar == true)
+            if (_emEdicao.ContainsKey(editar))
             {
-                //_banco.SaveChanges();
-                _svc.Atualizar(editar);
+                _emEdicao[editar].Activate();
             }
             else
             {
-                _svc.Recarregar(editar);
-                //_banco.Entry(editar).Reload();
+                var detalhe = new OrdemServicoDetalhe(_svc, editar, this);
+                detalhe.Executar();
+
+                _emEdicao.Add(editar, detalhe);
+
+                detalhe.FormClosed += (s, args) => _emEdicao.Remove(editar);
             }
+            
         }
 
         private void bbiExcluir_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -91,6 +85,11 @@ namespace OS.Cadastro
             _itens.Clear();
             foreach (var os in ordens)
                 _itens.Add(os);
+        }
+
+        internal void InserirGrid(OrdemServico os)
+        {
+            _itens.Add(os);
         }
 
         private void bbiFinalizar_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)

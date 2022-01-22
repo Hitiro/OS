@@ -12,19 +12,56 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="EhFisico" Type="bit" Nullable="false" />
           <Property Name="Nome" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Docuemtno" Type="char" MaxLength="14" Nullable="false" />
+          <Property Name="Documento" Type="char" MaxLength="14" Nullable="false" />
           <Property Name="Telefone1" Type="char" MaxLength="11" Nullable="false" />
           <Property Name="Telefone2" Type="char" MaxLength="11" />
+          <Property Name="CEP" Type="char" MaxLength="8" />
+          <Property Name="Logradouro" Type="varchar" MaxLength="80" />
+          <Property Name="Cidade" Type="varchar" MaxLength="50" />
+          <Property Name="UF" Type="char" MaxLength="2" />
+          <Property Name="Numero" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Fornecedor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RazaoSocial" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TelefoneFixo" Type="char" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Funcionario">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nome" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CPF" Type="char" MaxLength="11" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FuncionarioAdm">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Salario" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FuncionarioComissao">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Porcentagem" Type="decimal" Precision="4" Scale="2" Nullable="false" />
         </EntityType>
         <EntityType Name="Mercadoria">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RepresentanteID" Type="int" Nullable="false" />
           <Property Name="EhServico" Type="bit" Nullable="false" />
           <Property Name="Nome" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Preco" Type="money" Nullable="false" />
           <Property Name="Qtde" Type="int" />
+          <Property Name="Excluido" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="OrdemServico">
           <Key>
@@ -49,6 +86,51 @@
           <Property Name="Qtde" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Observacao" Type="varchar" MaxLength="512" />
         </EntityType>
+        <EntityType Name="Representante">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FornecedorID" Type="int" Nullable="false" />
+          <Property Name="Nome" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TelefoneCel" Type="char" MaxLength="11" />
+        </EntityType>
+        <Association Name="FK_FuncionarioAdm_Funcionario">
+          <End Role="Funcionario" Type="Self.Funcionario" Multiplicity="1" />
+          <End Role="FuncionarioAdm" Type="Self.FuncionarioAdm" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Funcionario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FuncionarioAdm">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FuncionarioComissao_Funcionario">
+          <End Role="Funcionario" Type="Self.Funcionario" Multiplicity="1" />
+          <End Role="FuncionarioComissao" Type="Self.FuncionarioComissao" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Funcionario">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="FuncionarioComissao">
+              <PropertyRef Name="ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Mercadoria_Representante">
+          <End Role="Representante" Type="Self.Representante" Multiplicity="1" />
+          <End Role="Mercadoria" Type="Self.Mercadoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Representante">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Mercadoria">
+              <PropertyRef Name="RepresentanteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_OrdemServico_Cliente">
           <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
           <End Role="OrdemServico" Type="Self.OrdemServico" Multiplicity="*" />
@@ -85,6 +167,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Representante_Fornecedor">
+          <End Role="Fornecedor" Type="Self.Fornecedor" Multiplicity="1" />
+          <End Role="Representante" Type="Self.Representante" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fornecedor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Representante">
+              <PropertyRef Name="FornecedorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="SpAnaliseVendasReport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="dtInicial" Type="date" Mode="In" />
           <Parameter Name="dtFinal" Type="date" Mode="In" />
@@ -95,9 +189,26 @@
         </Function>
         <EntityContainer Name="OSModeloStoreContainer">
           <EntitySet Name="Cliente" EntityType="Self.Cliente" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Fornecedor" EntityType="Self.Fornecedor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Funcionario" EntityType="Self.Funcionario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FuncionarioAdm" EntityType="Self.FuncionarioAdm" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FuncionarioComissao" EntityType="Self.FuncionarioComissao" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Mercadoria" EntityType="Self.Mercadoria" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrdemServico" EntityType="Self.OrdemServico" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrdemServicoItem" EntityType="Self.OrdemServicoItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Representante" EntityType="Self.Representante" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_FuncionarioAdm_Funcionario" Association="Self.FK_FuncionarioAdm_Funcionario">
+            <End Role="Funcionario" EntitySet="Funcionario" />
+            <End Role="FuncionarioAdm" EntitySet="FuncionarioAdm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FuncionarioComissao_Funcionario" Association="Self.FK_FuncionarioComissao_Funcionario">
+            <End Role="Funcionario" EntitySet="Funcionario" />
+            <End Role="FuncionarioComissao" EntitySet="FuncionarioComissao" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Mercadoria_Representante" Association="Self.FK_Mercadoria_Representante">
+            <End Role="Representante" EntitySet="Representante" />
+            <End Role="Mercadoria" EntitySet="Mercadoria" />
+          </AssociationSet>
           <AssociationSet Name="FK_OrdemServico_Cliente" Association="Self.FK_OrdemServico_Cliente">
             <End Role="Cliente" EntitySet="Cliente" />
             <End Role="OrdemServico" EntitySet="OrdemServico" />
@@ -110,12 +221,24 @@
             <End Role="OrdemServico" EntitySet="OrdemServico" />
             <End Role="OrdemServicoItem" EntitySet="OrdemServicoItem" />
           </AssociationSet>
+          <AssociationSet Name="FK_Representante_Fornecedor" Association="Self.FK_Representante_Fornecedor">
+            <End Role="Fornecedor" EntitySet="Fornecedor" />
+            <End Role="Representante" EntitySet="Representante" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="OS.Modelo" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="Banco" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="SpAnaliseVendasReport" ReturnType="Collection(OS.Modelo.SpAnaliseVendasReport_Result)">
+            <Parameter Name="dtInicial" Mode="In" Type="DateTime" />
+            <Parameter Name="dtFinal" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="SpVerificaEstoque" ReturnType="Collection(Boolean)">
+            <Parameter Name="MercadoriaID" Mode="In" Type="Int32" />
+            <Parameter Name="QtdeDesejada" Mode="In" Type="Decimal" />
+          </FunctionImport>
           <EntitySet Name="Cliente" EntityType="OS.Modelo.Cliente" />
           <EntitySet Name="Mercadoria" EntityType="OS.Modelo.Mercadoria" />
           <EntitySet Name="OrdemServico" EntityType="OS.Modelo.OrdemServico" />
@@ -132,15 +255,31 @@
             <End Role="OrdemServico" EntitySet="OrdemServico" />
             <End Role="OrdemServicoItem" EntitySet="OrdemServicoItem" />
           </AssociationSet>
-          <FunctionImport Name="SpAnaliseVendasReport" ReturnType="Collection(OS.Modelo.SpAnaliseVendasReport_Result)">
-            <Parameter Name="dtInicial" Mode="In" Type="DateTime" />
-            <Parameter Name="dtFinal" Mode="In" Type="DateTime" />
-          </FunctionImport>
-          <FunctionImport Name="SpVerificaEstoque" ReturnType="Collection(Boolean)">
-            <Parameter Name="MercadoriaID" Mode="In" Type="Int32" />
-            <Parameter Name="QtdeDesejada" Mode="In" Type="Decimal" />
-          </FunctionImport>
+          <EntitySet Name="Fornecedor" EntityType="OS.Modelo.Fornecedor" />
+          <EntitySet Name="Representante" EntityType="OS.Modelo.Representante" />
+          <AssociationSet Name="FK_Representante_Fornecedor" Association="OS.Modelo.FK_Representante_Fornecedor">
+            <End Role="Fornecedor" EntitySet="Fornecedor" />
+            <End Role="Representante" EntitySet="Representante" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Mercadoria_Representante" Association="OS.Modelo.FK_Mercadoria_Representante">
+            <End Role="Representante" EntitySet="Representante" />
+            <End Role="Mercadoria" EntitySet="Mercadoria" />
+          </AssociationSet>
+          <EntitySet Name="Funcionario" EntityType="OS.Modelo.Funcionario" />
         </EntityContainer>
+        <ComplexType Name="SpAnaliseVendasReport_Result">
+          <Property Type="DateTime" Name="OSDataAbertura" Nullable="true" />
+          <Property Type="DateTime" Name="OSDataFechamento" Nullable="true" />
+          <Property Type="String" Name="OSSituacao" Nullable="false" MaxLength="14" />
+          <Property Type="String" Name="Cliente" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Telefone" Nullable="false" MaxLength="11" />
+          <Property Type="String" Name="MercadoriaNome" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="MercadoriaTipo" Nullable="false" MaxLength="10" />
+          <Property Type="Decimal" Name="MercadoriaPreco" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="ItemQtde" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ItemPreco" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="ItemSubTotal" Nullable="true" Precision="38" Scale="6" />
+        </ComplexType>
         <EntityType Name="Cliente">
           <Key>
             <PropertyRef Name="ID" />
@@ -148,9 +287,14 @@
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="EhFisico" Type="Boolean" Nullable="false" />
           <Property Name="Nome" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Docuemtno" Type="String" Nullable="false" MaxLength="14" FixedLength="true" Unicode="false" />
+          <Property Name="Documento" Type="String" Nullable="false" MaxLength="14" FixedLength="true" Unicode="false" />
           <Property Name="Telefone1" Type="String" Nullable="false" MaxLength="11" FixedLength="true" Unicode="false" />
           <Property Name="Telefone2" Type="String" MaxLength="11" FixedLength="true" Unicode="false" />
+          <Property Name="CEP" Type="String" MaxLength="8" FixedLength="true" Unicode="false" />
+          <Property Name="Logradouro" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Cidade" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UF" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="Numero" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="OrdemServico" Relationship="OS.Modelo.FK_OrdemServico_Cliente" FromRole="Cliente" ToRole="OrdemServico" />
         </EntityType>
         <EntityType Name="Mercadoria">
@@ -163,6 +307,9 @@
           <Property Name="Preco" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
           <Property Name="Qtde" Type="Int32" />
           <NavigationProperty Name="OrdemServicoItem" Relationship="OS.Modelo.FK_OrdemServicoItem_Mercadoria" FromRole="Mercadoria" ToRole="OrdemServicoItem" />
+          <Property Name="RepresentanteID" Type="Int32" Nullable="false" />
+          <Property Name="Excluido" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Representante" Relationship="OS.Modelo.FK_Mercadoria_Representante" FromRole="Mercadoria" ToRole="Representante" />
         </EntityType>
         <EntityType Name="OrdemServico">
           <Key>
@@ -174,9 +321,9 @@
           <Property Name="DtFechamento" Type="DateTime" Precision="3" />
           <Property Name="Observacao" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
           <Property Name="Situacao" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="SituacaoDescricao" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="Cliente" Relationship="OS.Modelo.FK_OrdemServico_Cliente" FromRole="OrdemServico" ToRole="Cliente" />
           <NavigationProperty Name="OrdemServicoItem" Relationship="OS.Modelo.FK_OrdemServicoItem_OrdemServico" FromRole="OrdemServico" ToRole="OrdemServicoItem" />
-          <Property Name="SituacaoDescricao" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="OrdemServicoItem">
           <Key>
@@ -227,31 +374,99 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="SpAnaliseVendasReport_Result">
-          <Property Type="DateTime" Name="OSDataAbertura" Nullable="true" />
-          <Property Type="DateTime" Name="OSDataFechamento" Nullable="true" />
-          <Property Type="String" Name="OSSituacao" Nullable="false" MaxLength="14" />
-          <Property Type="String" Name="Cliente" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="Telefone" Nullable="false" MaxLength="11" />
-          <Property Type="String" Name="MercadoriaNome" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="MercadoriaTipo" Nullable="false" MaxLength="10" />
-          <Property Type="Decimal" Name="MercadoriaPreco" Nullable="false" Precision="19" />
-          <Property Type="Decimal" Name="ItemQtde" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="ItemPreco" Nullable="false" Precision="19" />
-          <Property Type="Decimal" Name="ItemSubTotal" Nullable="true" Precision="38" Scale="6" />
-        </ComplexType>
+        <EntityType Name="Fornecedor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RazaoSocial" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TelefoneFixo" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Representante" Relationship="OS.Modelo.FK_Representante_Fornecedor" FromRole="Fornecedor" ToRole="Representante" />
+        </EntityType>
+        <EntityType Name="Representante">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FornecedorID" Type="Int32" Nullable="false" />
+          <Property Name="Nome" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TelefoneCel" Type="String" MaxLength="11" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Fornecedor" Relationship="OS.Modelo.FK_Representante_Fornecedor" FromRole="Representante" ToRole="Fornecedor" />
+          <NavigationProperty Name="Mercadoria" Relationship="OS.Modelo.FK_Mercadoria_Representante" FromRole="Representante" ToRole="Mercadoria" />
+        </EntityType>
+        <Association Name="FK_Representante_Fornecedor">
+          <End Type="OS.Modelo.Fornecedor" Role="Fornecedor" Multiplicity="1" />
+          <End Type="OS.Modelo.Representante" Role="Representante" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fornecedor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Representante">
+              <PropertyRef Name="FornecedorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Mercadoria_Representante">
+          <End Type="OS.Modelo.Representante" Role="Representante" Multiplicity="1" />
+          <End Type="OS.Modelo.Mercadoria" Role="Mercadoria" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Representante">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Mercadoria">
+              <PropertyRef Name="RepresentanteID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Funcionario">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nome" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CPF" Type="String" Nullable="false" MaxLength="11" FixedLength="true" Unicode="false" />
+        </EntityType>
+        <EntityType Name="FuncionarioAdm" BaseType="OS.Modelo.Funcionario">
+          <Property Name="Salario" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+        </EntityType>
+        <EntityType Name="FuncionarioComissao" BaseType="OS.Modelo.Funcionario">
+          <Property Name="Porcentagem" Type="Decimal" Nullable="false" Precision="4" Scale="2" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="OSModeloStoreContainer" CdmEntityContainer="Banco">
+          <FunctionImportMapping FunctionImportName="SpAnaliseVendasReport" FunctionName="OS.Modelo.Store.SpAnaliseVendasReport">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OS.Modelo.SpAnaliseVendasReport_Result">
+                <ScalarProperty Name="OSDataAbertura" ColumnName="OSDataAbertura" />
+                <ScalarProperty Name="OSDataFechamento" ColumnName="OSDataFechamento" />
+                <ScalarProperty Name="OSSituacao" ColumnName="OSSituacao" />
+                <ScalarProperty Name="Cliente" ColumnName="Cliente" />
+                <ScalarProperty Name="Telefone" ColumnName="Telefone" />
+                <ScalarProperty Name="MercadoriaNome" ColumnName="MercadoriaNome" />
+                <ScalarProperty Name="MercadoriaTipo" ColumnName="MercadoriaTipo" />
+                <ScalarProperty Name="MercadoriaPreco" ColumnName="MercadoriaPreco" />
+                <ScalarProperty Name="ItemQtde" ColumnName="ItemQtde" />
+                <ScalarProperty Name="ItemPreco" ColumnName="ItemPreco" />
+                <ScalarProperty Name="ItemSubTotal" ColumnName="ItemSubTotal" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SpVerificaEstoque" FunctionName="OS.Modelo.Store.SpVerificaEstoque" />
           <EntitySetMapping Name="Cliente">
             <EntityTypeMapping TypeName="OS.Modelo.Cliente">
               <MappingFragment StoreEntitySet="Cliente">
+                <ScalarProperty Name="Numero" ColumnName="Numero" />
+                <ScalarProperty Name="UF" ColumnName="UF" />
+                <ScalarProperty Name="Cidade" ColumnName="Cidade" />
+                <ScalarProperty Name="Logradouro" ColumnName="Logradouro" />
+                <ScalarProperty Name="CEP" ColumnName="CEP" />
                 <ScalarProperty Name="Telefone2" ColumnName="Telefone2" />
                 <ScalarProperty Name="Telefone1" ColumnName="Telefone1" />
-                <ScalarProperty Name="Docuemtno" ColumnName="Docuemtno" />
+                <ScalarProperty Name="Documento" ColumnName="Documento" />
                 <ScalarProperty Name="Nome" ColumnName="Nome" />
                 <ScalarProperty Name="EhFisico" ColumnName="EhFisico" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
@@ -261,6 +476,8 @@
           <EntitySetMapping Name="Mercadoria">
             <EntityTypeMapping TypeName="OS.Modelo.Mercadoria">
               <MappingFragment StoreEntitySet="Mercadoria">
+                <ScalarProperty Name="Excluido" ColumnName="Excluido" />
+                <ScalarProperty Name="RepresentanteID" ColumnName="RepresentanteID" />
                 <ScalarProperty Name="Qtde" ColumnName="Qtde" />
                 <ScalarProperty Name="Preco" ColumnName="Preco" />
                 <ScalarProperty Name="Nome" ColumnName="Nome" />
@@ -294,24 +511,46 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SpAnaliseVendasReport" FunctionName="OS.Modelo.Store.SpAnaliseVendasReport">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="OS.Modelo.SpAnaliseVendasReport_Result">
-                <ScalarProperty Name="OSDataAbertura" ColumnName="OSDataAbertura" />
-                <ScalarProperty Name="OSDataFechamento" ColumnName="OSDataFechamento" />
-                <ScalarProperty Name="OSSituacao" ColumnName="OSSituacao" />
-                <ScalarProperty Name="Cliente" ColumnName="Cliente" />
-                <ScalarProperty Name="Telefone" ColumnName="Telefone" />
-                <ScalarProperty Name="MercadoriaNome" ColumnName="MercadoriaNome" />
-                <ScalarProperty Name="MercadoriaTipo" ColumnName="MercadoriaTipo" />
-                <ScalarProperty Name="MercadoriaPreco" ColumnName="MercadoriaPreco" />
-                <ScalarProperty Name="ItemQtde" ColumnName="ItemQtde" />
-                <ScalarProperty Name="ItemPreco" ColumnName="ItemPreco" />
-                <ScalarProperty Name="ItemSubTotal" ColumnName="ItemSubTotal" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SpVerificaEstoque" FunctionName="OS.Modelo.Store.SpVerificaEstoque" />
+          <EntitySetMapping Name="Fornecedor">
+            <EntityTypeMapping TypeName="OS.Modelo.Fornecedor">
+              <MappingFragment StoreEntitySet="Fornecedor">
+                <ScalarProperty Name="TelefoneFixo" ColumnName="TelefoneFixo" />
+                <ScalarProperty Name="RazaoSocial" ColumnName="RazaoSocial" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Representante">
+            <EntityTypeMapping TypeName="OS.Modelo.Representante">
+              <MappingFragment StoreEntitySet="Representante">
+                <ScalarProperty Name="TelefoneCel" ColumnName="TelefoneCel" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="FornecedorID" ColumnName="FornecedorID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Funcionario">
+            <EntityTypeMapping TypeName="IsTypeOf(OS.Modelo.Funcionario)">
+              <MappingFragment StoreEntitySet="Funcionario">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CPF" ColumnName="CPF" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="IsTypeOf(OS.Modelo.FuncionarioComissao)">
+              <MappingFragment StoreEntitySet="FuncionarioComissao">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Porcentagem" ColumnName="Porcentagem" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="IsTypeOf(OS.Modelo.FuncionarioAdm)">
+              <MappingFragment StoreEntitySet="FuncionarioAdm">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Salario" ColumnName="Salario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

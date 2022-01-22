@@ -31,6 +31,9 @@ namespace OS
         public virtual DbSet<Mercadoria> Mercadoria { get; set; }
         public virtual DbSet<OrdemServico> OrdemServico { get; set; }
         public virtual DbSet<OrdemServicoItem> OrdemServicoItem { get; set; }
+        public virtual DbSet<Fornecedor> Fornecedor { get; set; }
+        public virtual DbSet<Representante> Representante { get; set; }
+        public virtual DbSet<Funcionario> Funcionario { get; set; }
     
         public virtual ObjectResult<SpAnaliseVendasReport_Result> SpAnaliseVendasReport(Nullable<System.DateTime> dtInicial, Nullable<System.DateTime> dtFinal)
         {

@@ -68,6 +68,7 @@
     <Reference Include="DevExpress.Charts.v16.1.Core, Version=16.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Data.v16.1, Version=16.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.DataAccess.v16.1, Version=16.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.DataAccess.v16.1.UI, Version=16.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Office.v16.1.Core, Version=16.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.PivotGrid.v16.1.Core, Version=16.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Printing.v16.1.Core, Version=16.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
@@ -93,6 +94,10 @@
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -144,6 +149,30 @@
     <Compile Include="Cadastro\ClienteLista.Designer.cs">
       <DependentUpon>ClienteLista.cs</DependentUpon>
     </Compile>
+    <Compile Include="Cadastro\FuncionarioDetalhe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cadastro\FuncionarioDetalhe.Designer.cs">
+      <DependentUpon>FuncionarioDetalhe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cadastro\FuncionarioLista.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cadastro\FuncionarioLista.Designer.cs">
+      <DependentUpon>FuncionarioLista.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cadastro\MercadoriaDetalhe.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cadastro\MercadoriaDetalhe.Designer.cs">
+      <DependentUpon>MercadoriaDetalhe.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Cadastro\MercadoriaLista.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cadastro\MercadoriaLista.Designer.cs">
+      <DependentUpon>MercadoriaLista.cs</DependentUpon>
+    </Compile>
     <Compile Include="Cadastro\OrdemServicoDetalhe.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -165,6 +194,18 @@
     <Compile Include="Cliente.cs">
       <DependentUpon>Banco.tt</DependentUpon>
     </Compile>
+    <Compile Include="Fornecedor.cs">
+      <DependentUpon>Banco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Funcionario.cs">
+      <DependentUpon>Banco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FuncionarioAdm.cs">
+      <DependentUpon>Banco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FuncionarioComissao.cs">
+      <DependentUpon>Banco.tt</DependentUpon>
+    </Compile>
     <Compile Include="Menu.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -174,13 +215,23 @@
     <Compile Include="Mercadoria.cs">
       <DependentUpon>Banco.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\FuncionarioComissaoRegras.cs" />
+    <Compile Include="Modelo\FuncionarioAdmRegras.cs" />
+    <Compile Include="Modelo\MercadoriaRegras.cs" />
     <Compile Include="Modelo\ClienteRegras.cs" />
     <Compile Include="Modelo\OrdemServicoItem.cs" />
+    <Compile Include="Modelo\OrdemServicoItemRegras.cs" />
+    <Compile Include="Modelo\OrdemServicoRegras.cs" />
     <Compile Include="OrdemServico.cs">
       <DependentUpon>Banco.tt</DependentUpon>
     </Compile>
     <Compile Include="OrdemServicoItem.cs">
       <DependentUpon>Banco.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PrintRibbonControllerResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PrintRibbonControllerResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -196,6 +247,9 @@
     <Compile Include="Relatorio\OSPreviewTemplate.Designer.cs">
       <DependentUpon>OSPreviewTemplate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Representante.cs">
+      <DependentUpon>Banco.tt</DependentUpon>
+    </Compile>
     <Compile Include="Servico\OrdemServicoSvc.cs" />
     <Compile Include="SpAnaliseVendasReport_Result.cs">
       <DependentUpon>Banco.tt</DependentUpon>
@@ -206,6 +260,11 @@
     <Compile Include="SplashScreen1.Designer.cs">
       <DependentUpon>SplashScreen1.cs</DependentUpon>
     </Compile>
+    <Compile Include="XRDesignRibbonControllerResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>XRDesignRibbonControllerResources.resx</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AnaliseVendasReport.resx">
       <DependentUpon>AnaliseVendasReport.cs</DependentUpon>
     </EmbeddedResource>
@@ -214,6 +273,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Cadastro\ClienteLista.resx">
       <DependentUpon>ClienteLista.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cadastro\FuncionarioDetalhe.resx">
+      <DependentUpon>FuncionarioDetalhe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cadastro\FuncionarioLista.resx">
+      <DependentUpon>FuncionarioLista.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cadastro\MercadoriaDetalhe.resx">
+      <DependentUpon>MercadoriaDetalhe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Cadastro\MercadoriaLista.resx">
+      <DependentUpon>MercadoriaLista.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Cadastro\OrdemServicoDetalhe.resx">
       <DependentUpon>OrdemServicoDetalhe.cs</DependentUpon>
@@ -226,6 +297,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu.resx">
       <DependentUpon>Menu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PrintRibbonControllerResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PrintRibbonControllerResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -246,6 +321,10 @@
     <EmbeddedResource Include="SplashScreen1.resx">
       <DependentUpon>SplashScreen1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="XRDesignRibbonControllerResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>XRDesignRibbonControllerResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EntityDeploy Include="Banco.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Banco.Designer.cs</LastGenOutput>
@@ -256,9 +335,14 @@
     <None Include="OS_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Cliente.datasource" />
+    <None Include="Properties\DataSources\Fornecedor.datasource" />
+    <None Include="Properties\DataSources\Funcionario.datasource" />
+    <None Include="Properties\DataSources\FuncionarioAdm.datasource" />
+    <None Include="Properties\DataSources\FuncionarioComissao.datasource" />
     <None Include="Properties\DataSources\Mercadoria.datasource" />
     <None Include="Properties\DataSources\OrdemServico.datasource" />
     <None Include="Properties\DataSources\OrdemServicoItem.datasource" />
+    <None Include="Properties\DataSources\Representante.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -302,6 +386,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Bibliotecas\Bibliotecas\Bibliotecas.csproj">
+      <Project>{5cecd6d7-fb94-41b6-b07e-6aa46a0d4d3a}</Project>
+      <Name>Bibliotecas</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

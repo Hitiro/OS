@@ -33,7 +33,7 @@ namespace OS.Cadastro
         {
             var novo = new Cliente
             {
-                Docuemtno = String.Empty,
+                Documento = String.Empty,
                 Telefone1 = String.Empty,
                 Telefone2 = String.Empty
             };

@@ -29,17 +29,25 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            DevExpress.XtraEditors.TileItemElement tileItemElement9 = new DevExpress.XtraEditors.TileItemElement();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Menu));
-            DevExpress.XtraEditors.TileItemElement tileItemElement10 = new DevExpress.XtraEditors.TileItemElement();
             DevExpress.XtraSplashScreen.SplashScreenManager splashScreenManager1 = new DevExpress.XtraSplashScreen.SplashScreenManager(this, typeof(global::OS.SplashScreen1), true, true);
+            DevExpress.XtraEditors.TileItemElement tileItemElement1 = new DevExpress.XtraEditors.TileItemElement();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Menu));
+            DevExpress.XtraEditors.TileItemElement tileItemElement2 = new DevExpress.XtraEditors.TileItemElement();
+            DevExpress.XtraEditors.TileItemElement tileItemElement4 = new DevExpress.XtraEditors.TileItemElement();
+            DevExpress.XtraEditors.TileItemElement tileItemElement3 = new DevExpress.XtraEditors.TileItemElement();
             this.tileControl1 = new DevExpress.XtraEditors.TileControl();
             this.tileGroup2 = new DevExpress.XtraEditors.TileGroup();
-            this.tileGroup3 = new DevExpress.XtraEditors.TileGroup();
             this.tliCliente = new DevExpress.XtraEditors.TileItem();
+            this.tliMercadoria = new DevExpress.XtraEditors.TileItem();
+            this.tileGroup3 = new DevExpress.XtraEditors.TileGroup();
             this.tliOS = new DevExpress.XtraEditors.TileItem();
             this.defaultLookAndFeel1 = new DevExpress.LookAndFeel.DefaultLookAndFeel(this.components);
+            this.tileItem1 = new DevExpress.XtraEditors.TileItem();
             this.SuspendLayout();
+            // 
+            // splashScreenManager1
+            // 
+            splashScreenManager1.ClosingDelay = 500;
             // 
             // tileControl1
             // 
@@ -48,7 +56,7 @@
             this.tileControl1.Groups.Add(this.tileGroup2);
             this.tileControl1.Groups.Add(this.tileGroup3);
             this.tileControl1.Location = new System.Drawing.Point(0, 0);
-            this.tileControl1.MaxId = 4;
+            this.tileControl1.MaxId = 8;
             this.tileControl1.Name = "tileControl1";
             this.tileControl1.ShowGroupText = true;
             this.tileControl1.Size = new System.Drawing.Size(1032, 483);
@@ -58,8 +66,30 @@
             // tileGroup2
             // 
             this.tileGroup2.Items.Add(this.tliCliente);
+            this.tileGroup2.Items.Add(this.tliMercadoria);
+            this.tileGroup2.Items.Add(this.tileItem1);
             this.tileGroup2.Name = "tileGroup2";
             this.tileGroup2.Text = "Cadastros";
+            // 
+            // tliCliente
+            // 
+            tileItemElement1.Image = ((System.Drawing.Image)(resources.GetObject("tileItemElement1.Image")));
+            tileItemElement1.Text = "Clientes";
+            this.tliCliente.Elements.Add(tileItemElement1);
+            this.tliCliente.Id = 2;
+            this.tliCliente.ItemSize = DevExpress.XtraEditors.TileItemSize.Medium;
+            this.tliCliente.Name = "tliCliente";
+            this.tliCliente.ItemClick += new DevExpress.XtraEditors.TileItemClickEventHandler(this.tliCliente_ItemClick);
+            // 
+            // tliMercadoria
+            // 
+            tileItemElement2.Image = ((System.Drawing.Image)(resources.GetObject("tileItemElement2.Image")));
+            tileItemElement2.Text = "Mercadoria";
+            this.tliMercadoria.Elements.Add(tileItemElement2);
+            this.tliMercadoria.Id = 4;
+            this.tliMercadoria.ItemSize = DevExpress.XtraEditors.TileItemSize.Medium;
+            this.tliMercadoria.Name = "tliMercadoria";
+            this.tliMercadoria.ItemClick += new DevExpress.XtraEditors.TileItemClickEventHandler(this.tliMercadoria_ItemClick);
             // 
             // tileGroup3
             // 
@@ -67,33 +97,29 @@
             this.tileGroup3.Name = "tileGroup3";
             this.tileGroup3.Text = "Processos";
             // 
-            // tliCliente
-            // 
-            tileItemElement9.Image = ((System.Drawing.Image)(resources.GetObject("tileItemElement9.Image")));
-            tileItemElement9.Text = "Clientes";
-            this.tliCliente.Elements.Add(tileItemElement9);
-            this.tliCliente.Id = 2;
-            this.tliCliente.ItemSize = DevExpress.XtraEditors.TileItemSize.Medium;
-            this.tliCliente.Name = "tliCliente";
-            this.tliCliente.ItemClick += new DevExpress.XtraEditors.TileItemClickEventHandler(this.tliCliente_ItemClick);
-            // 
             // tliOS
             // 
-            tileItemElement10.Image = ((System.Drawing.Image)(resources.GetObject("tileItemElement10.Image")));
-            tileItemElement10.Text = "Ordem de Serviço";
-            this.tliOS.Elements.Add(tileItemElement10);
+            tileItemElement4.Image = ((System.Drawing.Image)(resources.GetObject("tileItemElement4.Image")));
+            tileItemElement4.Text = "Ordem de Serviço";
+            this.tliOS.Elements.Add(tileItemElement4);
             this.tliOS.Id = 3;
             this.tliOS.ItemSize = DevExpress.XtraEditors.TileItemSize.Medium;
             this.tliOS.Name = "tliOS";
             this.tliOS.ItemClick += new DevExpress.XtraEditors.TileItemClickEventHandler(this.tliOS_ItemClick);
             // 
-            // splashScreenManager1
-            // 
-            splashScreenManager1.ClosingDelay = 500;
-            // 
             // defaultLookAndFeel1
             // 
             this.defaultLookAndFeel1.LookAndFeel.SkinName = "Office 2013";
+            // 
+            // tileItem1
+            // 
+            tileItemElement3.Image = ((System.Drawing.Image)(resources.GetObject("tileItemElement3.Image")));
+            tileItemElement3.Text = "Funcionario";
+            this.tileItem1.Elements.Add(tileItemElement3);
+            this.tileItem1.Id = 7;
+            this.tileItem1.ItemSize = DevExpress.XtraEditors.TileItemSize.Medium;
+            this.tileItem1.Name = "tileItem1";
+            this.tileItem1.ItemClick += new DevExpress.XtraEditors.TileItemClickEventHandler(this.tileItem1_ItemClick);
             // 
             // Menu
             // 
@@ -117,5 +143,7 @@
         private DevExpress.XtraEditors.TileGroup tileGroup3;
         private DevExpress.XtraEditors.TileItem tliOS;
         private DevExpress.LookAndFeel.DefaultLookAndFeel defaultLookAndFeel1;
+        private DevExpress.XtraEditors.TileItem tliMercadoria;
+        private DevExpress.XtraEditors.TileItem tileItem1;
     }
 }
